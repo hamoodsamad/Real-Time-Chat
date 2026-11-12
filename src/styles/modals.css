@@ -1,0 +1,257 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(4px);
+}
+
+.modal-container {
+  width: 100%;
+  max-width: 440px;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.modal-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.icon-close-button {
+  color: var(--text-muted);
+}
+
+.modal-search-form {
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  margin-bottom: 16px;
+}
+
+.modal-search-form input {
+  flex: 1;
+  background: transparent;
+  color: var(--text-main);
+  font-size: 14px;
+}
+
+.modal-results-list {
+  max-height: 280px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.status-label {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 13px;
+  padding: 20px 0;
+}
+
+.user-search-row {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-tertiary);
+  gap: 12px;
+}
+
+.user-search-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-search-info strong {
+  font-size: 14px;
+}
+
+.user-search-info span {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.action-button-sm {
+  background-color: var(--accent-color);
+  color: white;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+}
+
+.settings-avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.upload-avatar-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--accent-color);
+  cursor: pointer;
+}
+
+.settings-form .input-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.settings-form label {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.settings-form input,
+.settings-form textarea {
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+.call-notification-banner {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--accent-color);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  z-index: 999;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.call-notification-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.call-notification-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.call-accept-button {
+  background-color: var(--accent-success);
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.call-reject-button {
+  background-color: var(--accent-danger);
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.video-overlay-wrapper {
+  position: fixed;
+  inset: 0;
+  background-color: #000;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+.streams-canvas {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.remote-stream-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.local-stream-pip {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  width: 200px;
+  height: 140px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 2px solid var(--border-color);
+  background-color: #111;
+}
+
+.local-stream-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.call-controls-panel {
+  height: 90px;
+  background-color: rgba(18, 24, 36, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.control-round-button {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-full);
+  background-color: var(--bg-surface);
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.btn-danger {
+  background-color: var(--accent-danger);
+}
+.btn-hangup {
+  background-color: var(--accent-danger);
+  transform: scale(1.1);
+}

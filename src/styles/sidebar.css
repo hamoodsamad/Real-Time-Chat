@@ -1,0 +1,142 @@
+.app-sidebar {
+  width: 360px;
+  height: 100%;
+  background-color: var(--bg-secondary);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.sidebar-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.profile-summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-identifiers {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-displayname {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.profile-username {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.sidebar-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sidebar-search-box {
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-tertiary);
+  margin: 14px 16px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  gap: 8px;
+}
+
+.search-box-icon {
+  color: var(--text-dim);
+}
+
+.sidebar-search-box input {
+  background: transparent;
+  color: var(--text-main);
+  font-size: 13px;
+  width: 100%;
+}
+
+.conversations-scroll-region {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.conversation-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 18px;
+  gap: 14px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(40, 51, 74, 0.4);
+  transition: background-color 0.15s ease;
+}
+
+.conversation-item:hover {
+  background-color: var(--bg-tertiary);
+}
+
+.conversation-item.active-item {
+  background-color: var(--bg-surface);
+  border-left: 3px solid var(--accent-color);
+}
+
+.conversation-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.conversation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 4px;
+}
+
+.conversation-title {
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.conversation-timestamp {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.conversation-preview-row {
+  display: flex;
+  align-items: center;
+}
+
+.conversation-last-message {
+  font-size: 13px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.typing-status-text {
+  color: var(--accent-color);
+  font-weight: 500;
+}
+
+.sidebar-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  color: var(--text-dim);
+  font-size: 13px;
+}
