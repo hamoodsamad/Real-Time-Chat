@@ -133,13 +133,15 @@ export const markMessagesAsRead = async (
 ) => {
   if (!conversationId || !userId || !unreadMessageIds?.length) return;
 
-  for (const msgId of unreadMessageIds) {
-    const msgRef = doc(db, "conversations", conversationId, "messages", msgId);
-    await updateDoc(msgRef, {
-      readBy: arrayUnion(userId),
-      status: "read",
-    });
-  }
+  await Promise.all(
+    unreadMessageIds.map((msgId) => {
+      const msgRef = doc(db, "conversations", conversationId, "messages", msgId);
+      return updateDoc(msgRef, {
+        readBy: arrayUnion(userId),
+        status: "read",
+      }).catch(() => {});
+    }),
+  );
 };
 
 export const updateMessageReaction = async (

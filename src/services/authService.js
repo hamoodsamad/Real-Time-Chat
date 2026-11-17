@@ -53,10 +53,6 @@ export const loginUser = async (email, password) => {
   await setDoc(
     userDocRef,
     {
-      uid: user.uid,
-      displayName: user.displayName || email.split("@")[0],
-      email: user.email,
-      username: email.split("@")[0],
       isOnline: true,
       lastSeen: serverTimestamp(),
     },

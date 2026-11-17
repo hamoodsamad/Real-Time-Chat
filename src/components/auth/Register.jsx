@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { registerUser } from "../../services/authService";
 import { isValidEmail } from "../../utils/validationUtils";
 
@@ -59,6 +59,15 @@ export const Register = ({ onSwitchToLogin }) => {
 
   return (
     <div className="auth-card">
+      <a
+        href="https://my-portfolio-czuhuqnne-hamoodsamad0321-6526.vercel.app"
+        className="back-to-portfolio-btn"
+        title="Return to Portfolio"
+      >
+        <ArrowLeft size={16} />
+        <span>Back to Portfolio</span>
+      </a>
+
       <div className="auth-header">
         <h2>Register Profile</h2>
         <p>Set up your platform credentials</p>

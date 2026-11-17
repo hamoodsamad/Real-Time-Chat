@@ -24,8 +24,13 @@ export const MessageItem = ({ message, currentUserId, conversationId }) => {
 
   const formatMessageTime = (ts) => {
     if (!ts) return "";
-    const date = ts.toDate();
-    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    try {
+      const date = typeof ts.toDate === "function" ? ts.toDate() : new Date(ts);
+      if (isNaN(date.getTime())) return "";
+      return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    } catch {
+      return "";
+    }
   };
 
   return (

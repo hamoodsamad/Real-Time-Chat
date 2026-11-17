@@ -23,9 +23,13 @@ export const useWebRTC = () => {
   const bindRemoteTracks = useCallback((peerConnection) => {
     const remote = new MediaStream();
     peerConnection.ontrack = (event) => {
-      event.streams[0].getTracks().forEach((track) => {
-        remote.addTrack(track);
-      });
+      if (event.streams && event.streams[0]) {
+        event.streams[0].getTracks().forEach((track) => {
+          remote.addTrack(track);
+        });
+      } else if (event.track) {
+        remote.addTrack(event.track);
+      }
     };
     setRemoteStream(remote);
     peerConnectionRef.current = peerConnection;

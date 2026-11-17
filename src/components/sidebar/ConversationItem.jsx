@@ -28,15 +28,20 @@ export const ConversationItem = ({
 
   const formatTimestamp = (timestamp) => {
     if (!timestamp) return "";
-    const date = timestamp.toDate();
-    const now = new Date();
-    if (date.toDateString() === now.toDateString()) {
-      return date.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
+    try {
+      const date = typeof timestamp.toDate === "function" ? timestamp.toDate() : new Date(timestamp);
+      if (isNaN(date.getTime())) return "";
+      const now = new Date();
+      if (date.toDateString() === now.toDateString()) {
+        return date.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+      }
+      return date.toLocaleDateString([], { month: "short", day: "numeric" });
+    } catch {
+      return "";
     }
-    return date.toLocaleDateString([], { month: "short", day: "numeric" });
   };
 
   return (
