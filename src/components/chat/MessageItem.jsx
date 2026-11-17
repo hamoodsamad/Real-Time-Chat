@@ -1,10 +1,24 @@
 import React, { useState, useRef } from "react";
-import { Check, CheckCheck, Play, Pause, Mic } from "lucide-react";
-import { updateMessageReaction } from "../../services/chatService";
+import {
+  Check,
+  CheckCheck,
+  Play,
+  Pause,
+  Mic,
+  MapPin,
+  ExternalLink,
+  Trash2,
+  Copy,
+  Check as CopiedIcon,
+} from "lucide-react";
+import { updateMessageReaction, deleteMessage } from "../../services/chatService";
+
+const QUICK_REACTIONS = ["👍", "❤️", "😂", "😮", "😢", "🙏", "🔥", "🎉"];
 
 export const MessageItem = ({ message, currentUserId, conversationId }) => {
   const isMine = message.senderId === currentUserId;
   const [isPlaying, setIsPlaying] = useState(false);
+  const [copied, setCopied] = useState(false);
   const audioPlayerRef = useRef(null);
 
   const handleQuickReaction = (emoji) => {
@@ -19,6 +33,21 @@ export const MessageItem = ({ message, currentUserId, conversationId }) => {
     } else {
       audioPlayerRef.current.play();
       setIsPlaying(true);
+    }
+  };
+
+  const handleCopyText = () => {
+    const textToCopy = message.text || message.mapUrl || message.mediaUrl || "";
+    if (textToCopy) {
+      navigator.clipboard.writeText(textToCopy);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  const handleDelete = () => {
+    if (window.confirm("Delete this message for everyone?")) {
+      deleteMessage(conversationId, message.id);
     }
   };
 
@@ -42,6 +71,7 @@ export const MessageItem = ({ message, currentUserId, conversationId }) => {
           <span className="message-author">{message.senderName}</span>
         )}
 
+        {/* Audio / Voice Note */}
         {message.type === "audio" && message.mediaUrl && (
           <div className="voice-message-player">
             <audio
@@ -74,16 +104,52 @@ export const MessageItem = ({ message, currentUserId, conversationId }) => {
           </div>
         )}
 
+        {/* Image with Optional Caption */}
         {message.type === "image" && message.mediaUrl && (
-          <div className="message-image-wrapper">
+          <div className="message-image-card">
             <img
               src={message.mediaUrl}
               alt="attachment"
               className="chat-media-attachment"
             />
+            {message.text && (
+              <p className="message-image-caption">{message.text}</p>
+            )}
           </div>
         )}
 
+        {/* Location Card */}
+        {message.type === "location" && (
+          <div className="message-location-card">
+            <div className="location-card-header">
+              <div className="location-icon-badge">
+                <MapPin size={20} />
+              </div>
+              <div className="location-info">
+                <strong>Live Location</strong>
+                <span>
+                  {message.latitude && message.longitude
+                    ? `${message.latitude.toFixed(4)}, ${message.longitude.toFixed(4)}`
+                    : "Shared GPS Location"}
+                </span>
+              </div>
+            </div>
+            <a
+              href={
+                message.mapUrl ||
+                `https://www.google.com/maps?q=${message.latitude},${message.longitude}`
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+              className="location-view-btn"
+            >
+              <span>View in Google Maps</span>
+              <ExternalLink size={14} />
+            </a>
+          </div>
+        )}
+
+        {/* Document / File */}
         {message.type === "file" && message.mediaUrl && (
           <div className="message-file-wrapper">
             <a
@@ -97,9 +163,11 @@ export const MessageItem = ({ message, currentUserId, conversationId }) => {
           </div>
         )}
 
-        {message.type !== "audio" && message.text && (
-          <p className="message-text">{message.text}</p>
-        )}
+        {/* Standard Text Message */}
+        {message.type !== "audio" &&
+          message.type !== "image" &&
+          message.type !== "location" &&
+          message.text && <p className="message-text">{message.text}</p>}
 
         <div className="message-meta-footer">
           <span className="message-time">
@@ -116,6 +184,7 @@ export const MessageItem = ({ message, currentUserId, conversationId }) => {
           )}
         </div>
 
+        {/* Active Emoji Reactions */}
         {message.reactions && Object.keys(message.reactions).length > 0 && (
           <div className="reactions-display-bar">
             {Object.entries(message.reactions).map(([emoji, uids]) => (
@@ -130,25 +199,41 @@ export const MessageItem = ({ message, currentUserId, conversationId }) => {
           </div>
         )}
 
-        <div className="message-reaction-picker">
-          <button
-            className="reaction-trigger-btn"
-            onClick={() => handleQuickReaction("👍")}
-          >
-            👍
-          </button>
-          <button
-            className="reaction-trigger-btn"
-            onClick={() => handleQuickReaction("❤️")}
-          >
-            ❤️
-          </button>
-          <button
-            className="reaction-trigger-btn"
-            onClick={() => handleQuickReaction("😂")}
-          >
-            😂
-          </button>
+        {/* WhatsApp-Style Hover Quick Actions & Reactions Bar */}
+        <div className="message-hover-actions">
+          <div className="message-reaction-picker">
+            {QUICK_REACTIONS.map((em) => (
+              <button
+                key={em}
+                type="button"
+                className="reaction-trigger-btn"
+                onClick={() => handleQuickReaction(em)}
+              >
+                {em}
+              </button>
+            ))}
+          </div>
+
+          <div className="message-extra-tools">
+            <button
+              type="button"
+              className="message-tool-btn"
+              onClick={handleCopyText}
+              title="Copy message"
+            >
+              {copied ? <CopiedIcon size={14} /> : <Copy size={14} />}
+            </button>
+            {isMine && (
+              <button
+                type="button"
+                className="message-tool-btn delete-btn"
+                onClick={handleDelete}
+                title="Delete message"
+              >
+                <Trash2 size={14} />
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>

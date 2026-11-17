@@ -177,3 +177,73 @@
 .password-toggle-btn:hover {
   color: var(--text-main);
 }
+
+/* Auth Method Tabs (Email vs Phone) */
+.auth-method-tabs {
+  display: flex;
+  background-color: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  padding: 4px;
+  gap: 4px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border-color);
+}
+
+.auth-tab-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+
+.auth-tab-btn:hover {
+  color: var(--text-main);
+}
+
+.auth-tab-btn.active-tab {
+  background-color: var(--accent-color);
+  color: #fff;
+}
+
+/* OTP Code Verification View */
+.otp-code-input {
+  text-align: center;
+  font-size: 24px !important;
+  font-weight: 700;
+  letter-spacing: 8px;
+  padding: 12px !important;
+}
+
+.otp-preview-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: #93c5fd;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  margin-bottom: 18px;
+}
+
+.otp-resend-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.inline-flex-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+

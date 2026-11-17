@@ -117,7 +117,94 @@
 .conversation-preview-row {
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
+
+.archive-action-btn {
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+}
+
+.conversation-item:hover .archive-action-btn {
+  opacity: 1;
+}
+
+.archive-action-btn:hover {
+  color: var(--text-main);
+  background-color: var(--bg-surface);
+}
+
+/* WhatsApp Archived Banner at Top of Sidebar */
+.sidebar-archived-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  background-color: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.sidebar-archived-banner:hover {
+  background-color: var(--bg-tertiary);
+}
+
+.archived-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-main);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.archived-banner-count {
+  font-size: 12px;
+  color: var(--accent-color);
+  font-weight: 600;
+  background-color: rgba(59, 130, 246, 0.15);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+.sidebar-archived-nav-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.archived-back-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  transition: all 0.2s;
+}
+
+.archived-back-btn:hover {
+  color: var(--text-main);
+  background-color: var(--bg-surface);
+}
+
+.sidebar-archived-nav-header h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
 
 .conversation-last-message {
   font-size: 13px;

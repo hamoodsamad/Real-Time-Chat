@@ -1,9 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { UserPlus, Settings, LogOut, Search } from "lucide-react";
+import React, { useState, useEffect, useMemo } from "react";
+import {
+  UserPlus,
+  Settings,
+  LogOut,
+  Search,
+  Archive,
+  ArrowLeft,
+} from "lucide-react";
 import { Avatar } from "../common/Avatar";
 import { ConversationItem } from "./ConversationItem";
 import { UserSearchModal } from "./UserSearchModal";
-import { getUserById } from "../../services/userService";
+import {
+  getUserById,
+  archiveConversation,
+  unarchiveConversation,
+} from "../../services/userService";
 import { logoutUser } from "../../services/authService";
 
 export const Sidebar = ({
@@ -17,6 +28,12 @@ export const Sidebar = ({
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [filterQuery, setFilterQuery] = useState("");
   const [enrichedConversations, setEnrichedConversations] = useState([]);
+  const [showArchivedView, setShowArchivedView] = useState(false);
+
+  const archivedIds = useMemo(
+    () => userProfile?.archivedConversations || [],
+    [userProfile?.archivedConversations],
+  );
 
   useEffect(() => {
     let isMounted = true;
@@ -42,7 +59,33 @@ export const Sidebar = ({
     };
   }, [conversations, currentUser.uid]);
 
-  const filtered = enrichedConversations.filter((c) => {
+  const handleToggleArchive = async (convId, isCurrentlyArchived) => {
+    if (isCurrentlyArchived) {
+      await unarchiveConversation(currentUser.uid, convId);
+    } else {
+      await archiveConversation(currentUser.uid, convId);
+    }
+  };
+
+  // Partition into Active and Archived
+  const { activeList, archivedList } = useMemo(() => {
+    const active = [];
+    const archived = [];
+
+    enrichedConversations.forEach((c) => {
+      if (archivedIds.includes(c.id)) {
+        archived.push(c);
+      } else {
+        active.push(c);
+      }
+    });
+
+    return { activeList: active, archivedList: archived };
+  }, [enrichedConversations, archivedIds]);
+
+  const currentDisplayList = showArchivedView ? archivedList : activeList;
+
+  const filtered = currentDisplayList.filter((c) => {
     if (c.type === "direct") {
       const name =
         c.otherUserData?.displayName || c.otherUserData?.username || "";
@@ -82,7 +125,7 @@ export const Sidebar = ({
           </button>
           <button
             className="action-icon-button"
-            title="Account Settings"
+            title="Profile & Settings"
             onClick={onOpenSettings}
           >
             <Settings size={19} />
@@ -101,16 +144,55 @@ export const Sidebar = ({
         <Search size={16} className="search-box-icon" />
         <input
           type="text"
-          placeholder="Filter conversations..."
+          placeholder={
+            showArchivedView
+              ? "Filter archived..."
+              : "Filter conversations..."
+          }
           value={filterQuery}
           onChange={(e) => setFilterQuery(e.target.value)}
         />
       </div>
 
+      {/* WhatsApp-Style Archived Chats Banner or Header */}
+      {showArchivedView ? (
+        <div className="sidebar-archived-nav-header">
+          <button
+            type="button"
+            className="archived-back-btn"
+            onClick={() => setShowArchivedView(false)}
+            title="Back to all chats"
+          >
+            <ArrowLeft size={18} />
+          </button>
+          <h4>Archived Chats ({archivedList.length})</h4>
+        </div>
+      ) : (
+        archivedList.length > 0 && (
+          <div
+            className="sidebar-archived-banner"
+            onClick={() => setShowArchivedView(true)}
+            title="View archived chats"
+          >
+            <div className="archived-banner-left">
+              <Archive size={17} />
+              <span>Archived</span>
+            </div>
+            <span className="archived-banner-count">
+              {archivedList.length}
+            </span>
+          </div>
+        )
+      )}
+
       <div className="conversations-scroll-region">
         {filtered.length === 0 ? (
           <div className="sidebar-empty">
-            <p>No active conversations.</p>
+            <p>
+              {showArchivedView
+                ? "No archived conversations."
+                : "No active conversations."}
+            </p>
           </div>
         ) : (
           filtered.map((conv) => (
@@ -120,6 +202,8 @@ export const Sidebar = ({
               currentUserId={currentUser.uid}
               isSelected={activeConversation?.id === conv.id}
               onSelect={onSelectConversation}
+              isArchived={archivedIds.includes(conv.id)}
+              onToggleArchive={handleToggleArchive}
             />
           ))
         )}

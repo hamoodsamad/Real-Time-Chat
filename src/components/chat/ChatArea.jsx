@@ -1,8 +1,9 @@
-import React, { useRef, useEffect } from "react";
-import { Phone, Video, MoreVertical } from "lucide-react";
+import React, { useRef, useEffect, useState } from "react";
+import { Phone, Video, Info } from "lucide-react";
 import { Avatar } from "../common/Avatar";
 import { MessageItem } from "./MessageItem";
 import { MessageInput } from "./MessageInput";
+import { ContactInfoModal } from "./ContactInfoModal";
 import { useMessages } from "../../hooks/useMessages";
 
 export const ChatArea = ({
@@ -12,6 +13,7 @@ export const ChatArea = ({
   onStartCall,
 }) => {
   const { messages, loading } = useMessages(conversation?.id, currentUser?.uid);
+  const [isContactInfoOpen, setIsContactInfoOpen] = useState(false);
   const bottomScrollRef = useRef(null);
 
   useEffect(() => {
@@ -40,7 +42,11 @@ export const ChatArea = ({
   return (
     <main className="chat-viewport">
       <header className="chat-header">
-        <div className="chat-header-profile">
+        <div
+          className="chat-header-profile clickable-profile"
+          onClick={() => isDirect && setIsContactInfoOpen(true)}
+          title="Click to view Contact Info"
+        >
           <Avatar
             src={
               isDirect ? targetUser?.photoURL : conversation.groupMeta?.photoURL
@@ -78,6 +84,13 @@ export const ChatArea = ({
               >
                 <Video size={19} />
               </button>
+              <button
+                className="action-icon-button"
+                title="Contact Info"
+                onClick={() => setIsContactInfoOpen(true)}
+              >
+                <Info size={19} />
+              </button>
             </>
           )}
         </div>
@@ -104,6 +117,15 @@ export const ChatArea = ({
         currentUser={currentUser}
         userProfile={userProfile}
       />
+
+      {isDirect && (
+        <ContactInfoModal
+          isOpen={isContactInfoOpen}
+          onClose={() => setIsContactInfoOpen(false)}
+          targetUser={targetUser}
+          onStartCall={onStartCall}
+        />
+      )}
     </main>
   );
 };

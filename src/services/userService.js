@@ -7,6 +7,9 @@ import {
   setDoc,
   serverTimestamp,
   getDoc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
 } from "firebase/firestore";
 import { db } from "../config/firebaseConfig";
 
@@ -59,4 +62,20 @@ export const getUserById = async (userId) => {
 export const updateUserProfile = async (userId, updates) => {
   const userRef = doc(db, "users", userId);
   await setDoc(userRef, updates, { merge: true });
+};
+
+export const archiveConversation = async (userId, conversationId) => {
+  if (!userId || !conversationId) return;
+  const userRef = doc(db, "users", userId);
+  await updateDoc(userRef, {
+    archivedConversations: arrayUnion(conversationId),
+  });
+};
+
+export const unarchiveConversation = async (userId, conversationId) => {
+  if (!userId || !conversationId) return;
+  const userRef = doc(db, "users", userId);
+  await updateDoc(userRef, {
+    archivedConversations: arrayRemove(conversationId),
+  });
 };

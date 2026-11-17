@@ -1,4 +1,5 @@
 import React from "react";
+import { Archive, ArchiveRestore } from "lucide-react";
 import { Avatar } from "../common/Avatar";
 
 export const ConversationItem = ({
@@ -6,6 +7,8 @@ export const ConversationItem = ({
   currentUserId,
   isSelected,
   onSelect,
+  isArchived = false,
+  onToggleArchive,
 }) => {
   const isDirect = conversation.type === "direct";
   const otherUserId = isDirect
@@ -29,7 +32,10 @@ export const ConversationItem = ({
   const formatTimestamp = (timestamp) => {
     if (!timestamp) return "";
     try {
-      const date = typeof timestamp.toDate === "function" ? timestamp.toDate() : new Date(timestamp);
+      const date =
+        typeof timestamp.toDate === "function"
+          ? timestamp.toDate()
+          : new Date(timestamp);
       if (isNaN(date.getTime())) return "";
       const now = new Date();
       if (date.toDateString() === now.toDateString()) {
@@ -41,6 +47,13 @@ export const ConversationItem = ({
       return date.toLocaleDateString([], { month: "short", day: "numeric" });
     } catch {
       return "";
+    }
+  };
+
+  const handleArchiveClick = (e) => {
+    e.stopPropagation();
+    if (onToggleArchive) {
+      onToggleArchive(conversation.id, isArchived);
     }
   };
 
@@ -67,6 +80,21 @@ export const ConversationItem = ({
               conversation.lastMessage?.text || "No messages yet"
             )}
           </p>
+
+          {onToggleArchive && (
+            <button
+              type="button"
+              className="archive-action-btn"
+              onClick={handleArchiveClick}
+              title={isArchived ? "Unarchive chat" : "Archive chat"}
+            >
+              {isArchived ? (
+                <ArchiveRestore size={16} />
+              ) : (
+                <Archive size={16} />
+              )}
+            </button>
+          )}
         </div>
       </div>
     </div>

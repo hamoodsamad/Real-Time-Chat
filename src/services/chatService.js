@@ -3,6 +3,7 @@ import {
   doc,
   addDoc,
   updateDoc,
+  deleteDoc,
   serverTimestamp,
   query,
   where,
@@ -12,6 +13,7 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { db } from "../config/firebaseConfig";
+import { sanitizeText } from "../utils/securityUtils";
 
 export const getOrCreateDirectConversation = async (
   currentUserOrId,
@@ -80,14 +82,18 @@ export const sendMessage = async (
     conversationId,
     "messages",
   );
+  const cleanText = sanitizeText(content.text || "");
   const messageData = {
     senderId,
     senderName: senderName || "User",
-    text: content.text || "",
+    text: cleanText,
     type: content.type || "text",
     mediaUrl: content.mediaUrl || null,
     fileName: content.fileName || null,
     fileSize: content.fileSize || null,
+    latitude: content.latitude || null,
+    longitude: content.longitude || null,
+    mapUrl: content.mapUrl || null,
     timestamp: serverTimestamp(),
     status: "sent",
     readBy: [senderId],
@@ -99,16 +105,18 @@ export const sendMessage = async (
 
   const docRef = await addDoc(messagesRef, messageData);
 
+  let previewText = cleanText;
+  if (!previewText) {
+    if (content.type === "image") previewText = "📷 Photo";
+    else if (content.type === "audio") previewText = "🎤 Voice message";
+    else if (content.type === "location") previewText = "📍 Location";
+    else previewText = "Sent an attachment";
+  }
+
   const convRef = doc(db, "conversations", conversationId);
   await updateDoc(convRef, {
     lastMessage: {
-      text:
-        content.text ||
-        (content.type === "image"
-          ? "Sent an image"
-          : content.type === "audio"
-            ? "Voice message"
-            : "Sent an attachment"),
+      text: previewText,
       senderId,
       timestamp: serverTimestamp(),
     },
@@ -116,6 +124,12 @@ export const sendMessage = async (
   });
 
   return docRef.id;
+};
+
+export const deleteMessage = async (conversationId, messageId) => {
+  if (!conversationId || !messageId) return;
+  const msgRef = doc(db, "conversations", conversationId, "messages", messageId);
+  await deleteDoc(msgRef);
 };
 
 export const setTypingStatus = async (conversationId, userId, isTyping) => {
